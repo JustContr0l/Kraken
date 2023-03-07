@@ -1,3 +1,5 @@
 /venv
 /.idea
 /__pycache__
+/Tools/CheckServer/node_modules/
+/Tools/CheckServer/accounts_info.js
