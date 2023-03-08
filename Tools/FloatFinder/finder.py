@@ -21,16 +21,20 @@ class FloatFinder(SteamLotsParser, SteamItemsJSON, TelegramSender):
     _max_float: float = None
     _min_sticker_x: float = None
 
-    def set_items_settings(self, allowed_names: list, blocked_names: list, min_price: float, max_price: float,
-                           min_float: float = 0.009999999, max_float: float = 0.96, min_sticker_x: float = 3.0):
+    def set_items_settings(self, allowed_names: list, blocked_names: list,
+                           min_price: float = 0.0, max_price: float = 1.0,
+                           min_float: float = 0.009999999, max_float: float = 0.96, min_sticker_x: float = 3.0,
+                           parse_fn: bool = True, parse_bs: bool = True):
         self._min_float, self._max_float, self._min_sticker_x = min_float, max_float, min_sticker_x
-        self.__items = self.get_items_for_ff(allowed_names, blocked_names, min_price, max_price, 730)
+        self.__items = self.get_items_for_ff(allowed_names, blocked_names, min_price, max_price,
+                                             730, parse_fn, parse_bs)
 
     def _check_item(self, wear, price, stickers):
         if wear >= self._max_float:
             return True
         if wear <= self._min_float:
             return True
+        # print("Bad Item Wear:", wear)
 
         all_stickers_price = 0.0
         for sticker in stickers:
@@ -39,6 +43,7 @@ class FloatFinder(SteamLotsParser, SteamItemsJSON, TelegramSender):
                 all_stickers_price += sticker_price
         if all_stickers_price > price * self._min_sticker_x:
             return True
+        # print("All stickers price:", all_stickers_price, "Item Price:", price)
         return False
 
     @staticmethod
@@ -82,6 +87,6 @@ class FloatFinder(SteamLotsParser, SteamItemsJSON, TelegramSender):
                     logger.info("Find good item!")
                     self.send_csgo_message(lot["name"], lot["min_price"], lot["price"], wear, stickers)
 
-                time.sleep(random.uniform(self._min_delay, self._max_delay))
+                # time.sleep(random.uniform(self._min_delay, self._max_delay))
             logger.info("No items. Sleep before next check.")
             time.sleep(random.randint(120, 180))

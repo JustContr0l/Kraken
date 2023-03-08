@@ -17,10 +17,18 @@ class SteamItemsJSON:
         return False
 
     def get_items_for_ff(self, allowed_names: list, blocked_names: list,
-                         min_p: float, max_p: float, game_id: int):
+                         min_p: float, max_p: float, game_id: int, parse_fn: bool, parse_bs: bool):
         items = []
         for item in self.data:
             if item["game_id"] != game_id:
+                continue
+
+            if "Factory New" not in item["name"] and "Battle-Scarred" not in item["name"]:
+                continue
+
+            if parse_fn is False and "Factory New" in item["name"]:
+                continue
+            if parse_bs is False and "Battle-Scarred" in item["name"]:
                 continue
 
             if not min_p < item["price"] < max_p:

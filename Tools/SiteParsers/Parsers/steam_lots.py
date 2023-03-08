@@ -18,7 +18,7 @@ class SteamLotsParser:
         self._proxies = proxies
         self._game_id = game_id
 
-        self._iterator = iterators.proxy_ua_iterator(proxies, one_proxy_count=5)
+        self._iterator = iterators.proxy_ua_iterator(proxies, one_proxy_count=2)
         self._min_delay, self._max_delay = delay.get_min_max_float_delay(proxies)
 
     @staticmethod
