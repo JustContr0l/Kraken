@@ -34,6 +34,9 @@ class SteamItemsJSON:
             if not min_p < item["price"] < max_p:
                 continue
 
+            if "Sticker" in item["name"] or "Graffiti" in item["name"]:
+                continue
+
             if len(blocked_names) > 0:
                 bad_item = False
                 for blocked_name in blocked_names:
@@ -44,10 +47,13 @@ class SteamItemsJSON:
                     continue
 
             if len(allowed_names) > 0:
-                for allowed_name in allowed_names:
-                    if allowed_name in item["name"]:
-                        items.append(item)
-                        break
+                if allowed_names[0] == "All":
+                    items.append(item)
+                else:
+                    for allowed_name in allowed_names:
+                        if allowed_name in item["name"]:
+                            items.append(item)
+                            break
             else:
                 items.append(item)
 
